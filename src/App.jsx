@@ -1,21 +1,18 @@
 // src/App.jsx
 import React from "react";
-import AppRoutes from "./routes/AppRoutes";
-import About from "./pages/About.jsx";
-import Home from "./pages/Home.jsx";
-import { Link } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/Approutes";
+import Navbar from "./components/Navbar"; // ✅ Import your Navbar
 import './index.css';
 
 const App = () => {
   return (
-    <div className="app-container">
-      <nav>
-        <Link to="/">Home</Link> |{" "}
-        <Link to="/about">About</Link> |{" "}
-        <Link to="/login">Login</Link>
-      </nav>
-      <AppRoutes />
-    </div>
+    <BrowserRouter>
+      <div className="app-container">
+        <Navbar /> {/* ✅ Use your Navbar component here */}
+        <AppRoutes />
+      </div>
+    </BrowserRouter>
   );
 };
 
