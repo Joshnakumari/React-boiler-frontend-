@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const mockUsers = [
+  { email: "user1@example.com", password: "pass123" },
+  { email: "user2@example.com", password: "secret456" },
+  { email: "user3@example.com", password: "mypassword" },
+];
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,9 +19,7 @@ const Login = () => {
     setMsg("");
     setError("");
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-
-    const matchedUser = users.find(
+    const matchedUser = mockUsers.find(
       (user) => user.email === email && user.password === password
     );
 
@@ -32,7 +36,7 @@ const Login = () => {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #dbeafe, #93c5fd, #60a5fa)", // light blue gradient
+        background: "linear-gradient(135deg, #dbeafe, #93c5fd, #60a5fa)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
