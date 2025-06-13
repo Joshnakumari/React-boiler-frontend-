@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,96 +17,80 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMsg("");
-    setError("");
-
-    const matchedUser = mockUsers.find(
-      (user) => user.email === email && user.password === password
+    const user = mockUsers.find(
+      (u) => u.email === email && u.password === password
     );
 
-    if (matchedUser) {
-      localStorage.setItem("user", JSON.stringify(matchedUser));
-      setMsg("Login Successful! Redirecting...");
-      setTimeout(() => navigate("/dashboard"), 1500);
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+      setMsg("Login successful!");
+      setTimeout(() => navigate("/form"), 1000);
     } else {
-      setError("Invalid email or password");
+      setError("Invalid credentials");
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #dbeafe, #93c5fd, #60a5fa)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.95)",
-          padding: "3rem",
-          borderRadius: "12px",
-          boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
-          width: "100%",
-          maxWidth: "400px",
-          color: "black",
-        }}
-      >
-        <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>Login</h2>
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <h2>Login</h2>
         <form onSubmit={handleSubmit}>
           <input
+            style={inputStyle}
             type="email"
             placeholder="Email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={inputStyle}
           />
           <input
+            style={inputStyle}
             type="password"
             placeholder="Password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={inputStyle}
           />
-          {msg && <p style={{ color: "green", margin: "0.5rem 0" }}>{msg}</p>}
-          {error && <p style={{ color: "red", margin: "0.5rem 0" }}>{error}</p>}
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: "0.8rem",
-              backgroundColor: "#3b82f6",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "1rem",
-              fontWeight: "bold",
-              cursor: "pointer",
-              marginTop: "1rem",
-              boxShadow: "0 4px 12px rgba(59, 130, 246, 0.5)",
-            }}
-          >
-            Login
-          </button>
+          <button style={buttonStyle} type="submit">Login</button>
         </form>
+        {msg && <p style={{ color: "green" }}>{msg}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
     </div>
   );
 };
 
+const containerStyle = {
+  minHeight: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  background: "linear-gradient(135deg, #93c5fd, #60a5fa)",
+};
+
+const cardStyle = {
+  background: "#fff",
+  padding: "2rem",
+  borderRadius: "10px",
+  boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+  width: "300px",
+};
+
 const inputStyle = {
   width: "100%",
-  padding: "0.75rem",
-  marginBottom: "1rem",
+  padding: "10px",
+  marginBottom: "10px",
+  borderRadius: "6px",
   border: "1px solid #ccc",
-  borderRadius: "8px",
-  fontSize: "1rem",
-  color: "black",
+};
+
+const buttonStyle = {
+  width: "100%",
+  padding: "10px",
+  border: "none",
+  backgroundColor: "#3b82f6",
+  color: "white",
+  borderRadius: "6px",
 };
 
 export default Login;

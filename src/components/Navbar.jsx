@@ -1,15 +1,20 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Reload user info from localStorage when location changes
     const storedUser = JSON.parse(localStorage.getItem("user"));
     setUser(storedUser);
   }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
     <nav className="navbar">
@@ -23,7 +28,11 @@ const Navbar = () => {
         {user ? (
           <>
             <Link to="/dashboard">Dashboard</Link>
-            <Link to="/logout">Logout</Link>
+            <Link to="/form">Form</Link>
+             <Link to="/userlist">Users</Link>
+            <button onClick={handleLogout} className="logout-btn">
+              Logout
+            </button>
             <span className="navbar-user">Hi, {user.email}</span>
           </>
         ) : (

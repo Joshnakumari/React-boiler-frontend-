@@ -5,6 +5,7 @@ import AppRoutes from "./routes/Approutes";
 import Navbar from "./components/Navbar"; // ✅ Import your Navbar
 import './index.css';
 
+
 const App = () => {
   return (
     <BrowserRouter>
