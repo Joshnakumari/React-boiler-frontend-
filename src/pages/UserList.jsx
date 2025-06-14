@@ -7,6 +7,10 @@ const UserList = () => {
     name: "", id: "", state: "", city: "", email: "", phone: "", gender: ""
   });
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortKey, setSortKey] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("userDetails")) || [];
     setUsers(stored);
@@ -36,6 +40,21 @@ const UserList = () => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
+  const filteredAndSortedUsers = users
+    .filter((user) =>
+      Object.values(user).some((val) =>
+        String(val).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    )
+    .sort((a, b) => {
+      if (!sortKey) return 0;
+      const valA = String(a[sortKey]).toLowerCase();
+      const valB = String(b[sortKey]).toLowerCase();
+      if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+      if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+
   return (
     <div
       style={{
@@ -53,6 +72,41 @@ const UserList = () => {
       }}>
         User Details List
       </h2>
+
+      {/* Search and Sort Controls */}
+      <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "6px", flex: "1" }}
+        />
+
+        <select
+          value={sortKey}
+          onChange={(e) => setSortKey(e.target.value)}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
+        >
+          <option value="">Sort by</option>
+          <option value="name">Name</option>
+          <option value="id">ID</option>
+          <option value="state">State</option>
+          <option value="city">City</option>
+          <option value="email">Email</option>
+          <option value="phone">Phone</option>
+          <option value="gender">Gender</option>
+        </select>
+
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          style={{ padding: "8px", border: "1px solid #ccc", borderRadius: "6px" }}
+        >
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
 
       <div style={{ overflowX: "auto" }}>
         <table
@@ -78,14 +132,26 @@ const UserList = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((u, i) =>
+            {filteredAndSortedUsers.map((u, i) =>
               editIndex === i ? (
                 <tr key={i}>
                   {["name", "id", "state", "city", "email", "phone"].map((field) => (
-                    <td key={field}><input name={field} value={editData[field]} onChange={handleChange} style={inputStyle} /></td>
+                    <td key={field}>
+                      <input
+                        name={field}
+                        value={editData[field]}
+                        onChange={handleChange}
+                        style={inputStyle}
+                      />
+                    </td>
                   ))}
                   <td>
-                    <select name="gender" value={editData.gender} onChange={handleChange} style={inputStyle}>
+                    <select
+                      name="gender"
+                      value={editData.gender}
+                      onChange={handleChange}
+                      style={inputStyle}
+                    >
                       <option value="">Select</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
