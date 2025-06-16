@@ -14,6 +14,7 @@ const FormPage = () => {
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -24,17 +25,19 @@ const FormPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newUser = { name, id, email, phone, gender, state, city };
+    const newUser = { name, id, email, phone, dob, gender, state, city };
     const existing = JSON.parse(localStorage.getItem("userDetails")) || [];
     const updated = [...existing, newUser];
 
     localStorage.setItem("userDetails", JSON.stringify(updated));
     setMessage("User details saved!");
 
+    // Reset form fields
     setName("");
     setId("");
     setEmail("");
     setPhone("");
+    setDob("");
     setGender("");
     setState("");
     setCity("");
@@ -101,6 +104,14 @@ const FormPage = () => {
           value={phone}
           required
           onChange={(e) => setPhone(e.target.value)}
+          style={inputStyle}
+        />
+
+        <input
+          type="date"
+          value={dob}
+          required
+          onChange={(e) => setDob(e.target.value)}
           style={inputStyle}
         />
 

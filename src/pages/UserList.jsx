@@ -4,7 +4,7 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editData, setEditData] = useState({
-    name: "", id: "", state: "", city: "", email: "", phone: "", gender: ""
+    name: "", id: "", state: "", city: "", email: "", phone: "", gender: "", dob: ""
   });
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,32 +48,35 @@ const UserList = () => {
     )
     .sort((a, b) => {
       if (!sortKey) return 0;
-      const valA = String(a[sortKey]).toLowerCase();
-      const valB = String(b[sortKey]).toLowerCase();
+
+      let valA = a[sortKey];
+      let valB = b[sortKey];
+
+      if (sortKey === "dob") {
+        valA = new Date(valA);
+        valB = new Date(valB);
+      } else {
+        valA = String(valA).toLowerCase();
+        valB = String(valB).toLowerCase();
+      }
+
       if (valA < valB) return sortOrder === "asc" ? -1 : 1;
       if (valA > valB) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to right, #dbeafe, #bfdbfe)",
-        padding: "2rem",
-        fontFamily: "Arial, sans-serif"
-      }}
-    >
-      <h2 style={{
-        textAlign: "center",
-        marginBottom: "2rem",
-        color: "#1e3a8a",
-        fontSize: "2rem"
-      }}>
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(to right, #dbeafe, #bfdbfe)",
+      padding: "2rem",
+      fontFamily: "Arial, sans-serif"
+    }}>
+      <h2 style={{ textAlign: "center", marginBottom: "2rem", color: "#1e3a8a", fontSize: "2rem" }}>
         User Details List
       </h2>
 
-      {/* Search and Sort Controls */}
+      {/* Search & Sort */}
       <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
         <input
           type="text"
@@ -96,6 +99,7 @@ const UserList = () => {
           <option value="email">Email</option>
           <option value="phone">Phone</option>
           <option value="gender">Gender</option>
+          <option value="dob">Date of Birth</option>
         </select>
 
         <select
@@ -109,16 +113,14 @@ const UserList = () => {
       </div>
 
       <div style={{ overflowX: "auto" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            backgroundColor: "#ffffff",
-            borderRadius: "12px",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
-            overflow: "hidden"
-          }}
-        >
+        <table style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          backgroundColor: "#ffffff",
+          borderRadius: "12px",
+          boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+          overflow: "hidden"
+        }}>
           <thead style={{ backgroundColor: "#3b82f6", color: "white" }}>
             <tr>
               <th style={thStyle}>Name</th>
@@ -128,6 +130,7 @@ const UserList = () => {
               <th style={thStyle}>Email</th>
               <th style={thStyle}>Phone</th>
               <th style={thStyle}>Gender</th>
+              <th style={thStyle}>DOB</th>
               <th style={thStyle}>Actions</th>
             </tr>
           </thead>
@@ -135,13 +138,14 @@ const UserList = () => {
             {filteredAndSortedUsers.map((u, i) =>
               editIndex === i ? (
                 <tr key={i}>
-                  {["name", "id", "state", "city", "email", "phone"].map((field) => (
+                  {["name", "id", "state", "city", "email", "phone", "dob"].map((field) => (
                     <td key={field}>
                       <input
                         name={field}
                         value={editData[field]}
                         onChange={handleChange}
                         style={inputStyle}
+                        type={field === "dob" ? "date" : "text"}
                       />
                     </td>
                   ))}
@@ -164,7 +168,7 @@ const UserList = () => {
                   </td>
                 </tr>
               ) : (
-                <tr key={i} style={{ transition: "background 0.3s", cursor: "default" }}>
+                <tr key={i}>
                   <td style={tdStyle}>{u.name}</td>
                   <td style={tdStyle}>{u.id}</td>
                   <td style={tdStyle}>{u.state}</td>
@@ -172,6 +176,7 @@ const UserList = () => {
                   <td style={tdStyle}>{u.email}</td>
                   <td style={tdStyle}>{u.phone}</td>
                   <td style={tdStyle}>{u.gender}</td>
+                  <td style={tdStyle}>{u.dob}</td>
                   <td style={tdStyle}>
                     <button onClick={() => handleEdit(i)} style={actionBtn}>Edit</button>
                     <button onClick={() => handleDelete(i)} style={deleteBtn}>Delete</button>
